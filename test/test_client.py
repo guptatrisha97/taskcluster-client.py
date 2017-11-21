@@ -55,6 +55,21 @@ class ClientTest(base.TCTest):
     def tearDown(self):
         time.sleep = self.realTimeSleep
 
+class TestBaseUrl(ClientTest):
+
+    def test_no_proxy(self):
+        client = self.clientClass(options={
+            'tcProxy': False
+        })
+        u = client._baseUrl();
+        self.assertEqual(u, 'https://fake.taskcluster.net/v1')
+
+    def test_with_proxy(self):
+        client = self.clientClass(options={
+            'tcProxy': True
+        })
+        u = client._baseUrl();
+        self.assertEqual(u, 'http://taskcluster/fake/v1')
 
 class TestSubArgsInRoute(ClientTest):
 

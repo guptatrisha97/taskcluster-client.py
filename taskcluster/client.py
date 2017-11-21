@@ -32,6 +32,7 @@ _defaultConfig = config = {
         'accessToken': os.environ.get('TASKCLUSTER_ACCESS_TOKEN'),
         'certificate': os.environ.get('TASKCLUSTER_CERTIFICATE'),
     },
+    'tcProxy': False,
     'maxRetries': 5,
     'signedUrlExpiration': 15 * 60,
 }
@@ -86,10 +87,17 @@ class BaseClient(object):
 
     # Determine the base url for this client
     def _baseUrl(self):
+        baseUrl = self.options['baseUrl']
+
         if self.options.get('tcProxy', False):
-            return ''
+            parts = list(urllib.parse.urlparse(baseUrl))
+            path = parts[1].rsplit('.', 2)[0]
+            parts[0] = 'http'
+            parts[1] = 'taskcluster'
+            parts[2] = path + parts[2]
+            return urllib.parse.urlunparse(parts)
         else:
-            return self.options['baseUrl']
+            return baseUrl
 
 
     def makeHawkExt(self):
