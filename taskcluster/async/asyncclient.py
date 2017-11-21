@@ -88,7 +88,7 @@ class AsyncBaseClient(BaseClient):
         the logic about doing failure retry and passes off the actual work
         of doing an HTTP request to another method."""
 
-        baseUrl = self.options['baseUrl']
+        baseUrl = self._baseUrl()
         # urljoin ignores the last param of the baseUrl if the base url doesn't end
         # in /.  I wonder if it's better to just do something basic like baseUrl +
         # route instead

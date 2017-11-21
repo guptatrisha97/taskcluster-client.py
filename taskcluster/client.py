@@ -84,6 +84,14 @@ class BaseClient(object):
         """
         return createSession()
 
+    # Determine the base url for this client
+    def _baseUrl(self):
+        if self.options.get('tcProxy', False):
+            return ''
+        else:
+            return self.options['baseUrl']
+
+
     def makeHawkExt(self):
         """ Make an 'ext' for Hawk authentication """
         o = self.options
@@ -168,7 +176,7 @@ class BaseClient(object):
         route = self._subArgsInRoute(entry, routeParams)
         if query:
             route += '?' + urllib.parse.urlencode(query)
-        return self.options['baseUrl'] + '/' + route
+        return self._baseUrl() + '/' + route
 
     def buildSignedUrl(self, methodName, *args, **kwargs):
         """ Build a signed URL.  This URL contains the credentials needed to access
@@ -431,7 +439,7 @@ class BaseClient(object):
         the logic about doing failure retry and passes off the actual work
         of doing an HTTP request to another method."""
 
-        baseUrl = self.options['baseUrl']
+        baseUrl = self._baseUrl()
         # urljoin ignores the last param of the baseUrl if the base url doesn't end
         # in /.  I wonder if it's better to just do something basic like baseUrl +
         # route instead
