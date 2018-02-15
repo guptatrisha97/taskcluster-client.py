@@ -512,9 +512,9 @@ class BaseClient(object):
                     data = response.json()
                 except:
                     pass  # Ignore JSON errors in error messages
-                if isinstance(data, dict):
+                if isinstance(data, dict) and data.get('message'):
                     message = data.get('message')
-                if not message:
+                else:
                     message = '%d: %s' % (status, statusMsg)
                 # Raise TaskclusterAuthFailure if this is an auth issue
                 if status == 401:

@@ -172,10 +172,9 @@ class AsyncBaseClient(BaseClient):
                 except:
                     pass  # Ignore JSON errors in error messages
                 # Find error message
-                message = "Unknown Server Error"
-                if isinstance(data, dict):
+                if isinstance(data, dict) and data.get('message'):
                     message = data.get('message')
-                if not message:
+                else:
                     message = '%d: %s' % (status, statusMsg)
                 # Raise TaskclusterAuthFailure if this is an auth issue
                 if status == 401:
