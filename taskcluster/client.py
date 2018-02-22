@@ -496,6 +496,11 @@ class BaseClient(object):
             if status == 204:
                 return None
 
+            # Handle content length 0 (empty server responses)
+            servresp = response.length
+            if servresp == 0:
+                return None
+            
             # Catch retryable errors and go to the beginning of the loop
             # to do the retry
             if 500 <= status and status < 600 and retry < retries:
