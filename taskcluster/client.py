@@ -492,10 +492,11 @@ class BaseClient(object):
                 )
                 
             # Handles Non JSON responses
-            answer = response.get_content_type()
-            typecheck = "application/json"
-            if answer != typecheck:
-                return None
+            answer = response.headers['Content-Type']
+            answer = answer.strip()
+            contentType = "application/json"
+            if answer != contentType:
+                return response.raw
 
             # Handle non 2xx status code and retry if possible
             status = response.status_code
