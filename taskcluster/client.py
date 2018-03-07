@@ -490,7 +490,7 @@ class BaseClient(object):
                     "Failed to establish connection",
                     superExc=rerr
                 )
-                
+            
             # Handle non 2xx status code and retry if possible
             status = response.status_code
             if status == 204:
