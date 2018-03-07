@@ -491,13 +491,6 @@ class BaseClient(object):
                     superExc=rerr
                 )
                 
-            # Handles Non JSON responses
-            answer = response.headers['Content-Type']
-            answer = answer.strip()
-            contentType = "application/json"
-            if answer != contentType:
-                return response.raw
-
             # Handle non 2xx status code and retry if possible
             status = response.status_code
             if status == 204:
@@ -542,9 +535,7 @@ class BaseClient(object):
                 )
 
             # Try to load JSON
-            try:
-                return response.json()
-            except ValueError:
+            if response.headers['Content-Type'].strip() != 'application/json':
                 return {"response": response}
 
         # This code-path should be unreachable
