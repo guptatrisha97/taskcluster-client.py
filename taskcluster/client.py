@@ -497,7 +497,7 @@ class BaseClient(object):
                 return None
 
             # Handle content length 0 (empty server responses)
-            if header("Content-Length: ".filesize(response)) == 0:
+            if headers.get('Content-Length') == 0:
                 return None
             
             # Catch retryable errors and go to the beginning of the loop
